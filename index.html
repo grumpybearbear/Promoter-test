@@ -96,18 +96,52 @@
     </div>
 
     <script>
-        // Staff database - Add your team members here
-        const staffDatabase = {
-            'test123': { name: 'Test User', whatsapp: '91234567' },
-            'john456': { name: 'John Smith', whatsapp: '98765432' },
-            'mary789': { name: 'Mary Johnson', whatsapp: '87654321' },
-            // Add more staff like this:
-            // 'staffid': { name: 'Full Name', whatsapp: '8digitnumber' },
-        };
-
         // Your company details
-        const companyName = 'Your Company Name';
+        const companyName = 'LG World's No 1 OLED TV';
         const pdfUrl = '#'; // Replace with your PDF URL when ready
+
+        // Google Sheets configuration
+        const SHEET_ID = '1fbMML9xxjiNT3We5d4DT0pVW2Ms-O3YfkH9roUG0kB8'; // Replace with your sheet ID
+        const SHEET_NAME = 'Sheet1'; // Or whatever your sheet tab is named
+        
+        // Staff data will be loaded from Google Sheets
+        let staffDatabase = {};
+
+        async function loadStaffFromSheet() {
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+                const response = await fetch(url);
+                const csvText = await response.text();
+                
+                // Parse CSV
+                const lines = csvText.split('\n');
+                const headers = lines[0].split(',').map(h => h.replace(/"/g, ''));
+                
+                // Skip header row, process data rows
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim() === '') continue;
+                    
+                    const values = lines[i].split(',').map(v => v.replace(/"/g, ''));
+                    const staffId = values[0];
+                    const name = values[1];
+                    const whatsapp = values[2];
+                    const active = values[3];
+                    
+                    if (staffId && name && whatsapp && active === 'TRUE') {
+                        staffDatabase[staffId] = {
+                            name: name,
+                            whatsapp: whatsapp
+                        };
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading staff data:', error);
+                // Fallback to sample data if sheet fails
+                staffDatabase = {
+                    'test123': { name: 'Test User', whatsapp: '91234567' }
+                };
+            }
+        }
 
         function showPdfMessage() {
             document.getElementById('pdfMessage').style.display = 'block';
@@ -116,7 +150,10 @@
             }, 3000);
         }
 
-        function loadStaffInfo() {
+        async function loadStaffInfo() {
+            // Load staff data from Google Sheets first
+            await loadStaffFromSheet();
+            
             const urlParams = new URLSearchParams(window.location.search);
             const staffId = urlParams.get('staff');
             const contentDiv = document.getElementById('content');
