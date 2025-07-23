@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Card - Contact Us</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: #007bff;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+        }
+        .whatsapp-btn:hover {
+            background: #22c55e;
+        }
+        .pdf-btn {
+            background: #dc3545;
+            color: white;
+        }
+        .pdf-btn:hover {
+            background: #c82333;
+        }
+        .contact-info {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: #666;
+        }
+        .message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="content">
+        <!-- Content will be loaded here by JavaScript -->
+    </div>
+
+    <script>
+        // Staff database - Add your team members here
+        const staffDatabase = {
+            'test123': { name: 'Test User', whatsapp: '91234567' },
+            'john456': { name: 'John Smith', whatsapp: '98765432' },
+            'mary789': { name: 'Mary Johnson', whatsapp: '87654321' },
+            // Add more staff like this:
+            // 'staffid': { name: 'Full Name', whatsapp: '8digitnumber' },
+        };
+
+        // Your company details
+        const companyName = 'Your Company Name';
+        const pdfUrl = '#'; // Replace with your PDF URL when ready
+
+        function showPdfMessage() {
+            document.getElementById('pdfMessage').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('pdfMessage').style.display = 'none';
+            }, 3000);
+        }
+
+        function loadStaffInfo() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const staffId = urlParams.get('staff');
+            const contentDiv = document.getElementById('content');
+
+            if (!staffId) {
+                contentDiv.innerHTML = `
+                    <div class="error">
+                        <h2>Invalid Link</h2>
+                        <p>Please scan a valid QR code from our business card.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const staffInfo = staffDatabase[staffId];
+            if (!staffInfo) {
+                contentDiv.innerHTML = `
+                    <div class="error">
+                        <h2>Staff Member Not Found</h2>
+                        <p>This business card may be outdated. Please contact us directly.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Create WhatsApp link
+            const whatsappUrl = `https://wa.me/65${staffInfo.whatsapp}?text=Hi ${staffInfo.name}! I scanned your business card and would like to know more about your products.`;
+            
+            // Create PDF button (placeholder for now)
+            const pdfButton = pdfUrl === '#' 
+                ? `<a href="#" class="button pdf-btn" onclick="showPdfMessage()">📄 Download Product Brochure</a>`
+                : `<a href="${pdfUrl}" class="button pdf-btn" target="_blank">📄 Download Product Brochure</a>`;
+
+            contentDiv.innerHTML = `
+                <div class="logo">CO</div>
+                <h1>Hi! I'm ${staffInfo.name}</h1>
+                <p class="subtitle">Thanks for scanning my business card!</p>
+                
+                <a href="${whatsappUrl}" class="button whatsapp-btn" target="_blank">
+                    💬 Chat with me on WhatsApp
+                </a>
+                
+                ${pdfButton}
+                
+                <div id="pdfMessage" class="message">
+                    📥 PDF will be available soon! Please contact me via WhatsApp for now.
+                </div>
+                
+                <div class="contact-info">
+                    <p><strong>${companyName}</strong><br>
+                    Contact: +65${staffInfo.whatsapp}</p>
+                </div>
+            `;
+        }
+
+        // Load staff info when page loads
+        window.onload = loadStaffInfo;
+    </script>
+</body>
+</html>
