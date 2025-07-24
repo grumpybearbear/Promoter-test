@@ -1,46 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Staff Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Lookup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 1.1em;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        input[type="text"]:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+            transform: scale(1.02);
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            margin: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result.success {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .result.error {
+            background: linear-gradient(135deg, #f44336, #da190b);
+            color: white;
+            box-shadow: 0 10px 20px rgba(244, 67, 54, 0.3);
+        }
+
+        .result.info {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            box-shadow: 0 10px 20px rgba(33, 150, 243, 0.3);
+        }
+
+        .staff-info {
+            text-align: left;
+        }
+
+        .staff-info h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+
+        .info-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-label {
+            font-weight: bold;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1 id="staff-name">Loading...</h1>
-  <p id="staff-number"></p>
-  <a id="brochure-link" href="#" target="_blank">Download Brochure</a>
+    <div class="container">
+        <h1>Staff Lookup</h1>
+        <div class="input-group">
+            <input type="text" id="staffId" placeholder="Enter Staff ID" />
+        </div>
+        <button onclick="lookupStaff()" id="lookupBtn">
+            Lookup Staff
+        </button>
+        <button onclick="clearResult()" id="clearBtn" style="background: linear-gradient(135deg, #ff6b6b, #ee5a52);">
+            Clear
+        </button>
+        <div id="result" class="result"></div>
+    </div>
 
-  <script>
-    // STEP 1: Get staffid from URL (e.g., ?staffid=2)
-    const urlParams = new URLSearchParams(window.location.search);
-    const staffid = urlParams.get("staffid");
+    <script>
+        // Replace with your actual Google Apps Script Web App URL
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzQsBwtUlPp628xR5sfXWXWQ50M7SJKlUH6v4TVQBTH52-o1iFeB3oruf4J3l8RkLPcWw/exec';
 
-    if (!staffid) {
-      document.getElementById("staff-name").textContent = "No staff ID provided.";
-    } else {
-      // STEP 2: Your Apps Script exec URL
-      const apiUrl = "https://script.google.com/macros/s/AKfycbzQsBwtUlPp628xR5sfXWXWQ50M7SJKlUH6v4TVQBTH52-o1iFeB3oruf4J3l8RkLPcWw/exec?staffid=" + staffid;
+        async function lookupStaff() {
+            const staffId = document.getElementById('staffId').value.trim();
+            const resultDiv = document.getElementById('result');
+            const lookupBtn = document.getElementById('lookupBtn');
 
-      // STEP 3: Fetch from Apps Script
-      fetch(apiUrl)
-        .then(res => res.json())
-        .then(data => {
-          if (!data.Name) {
-            document.getElementById("staff-name").textContent = "Staff not found.";
-            return;
-          }
+            if (!staffId) {
+                showResult('Please enter a Staff ID', 'error');
+                return;
+            }
 
-          // STEP 4: Inject into HTML
-          document.getElementById("staff-name").textContent = data.Name;
-          document.getElementById("staff-number").textContent = "WhatsApp: " + data.WhatsApp;
-          
-          // Optional: If each staff has their own brochure
-          document.getElementById("brochure-link").href = `brochures/${staffid}.pdf`;
-        })
-        .catch(err => {
-          document.getElementById("staff-name").textContent = "Error loading data.";
-          console.error(err);
+            // Show loading state
+            lookupBtn.innerHTML = 'Looking up... <span class="loading"></span>';
+            lookupBtn.disabled = true;
+            resultDiv.classList.remove('show');
+
+            try {
+                const response = await fetch(`${WEB_APP_URL}?staffid=${encodeURIComponent(staffId)}`);
+                const data = await response.text();
+
+                // Try to parse as JSON first
+                try {
+                    const jsonData = JSON.parse(data);
+                    displayStaffInfo(jsonData);
+                } catch (e) {
+                    // If not JSON, it's a text message (error or LG.com message)
+                    if (data.includes('LG.com')) {
+                        showResult(data, 'info');
+                    } else {
+                        showResult(data, 'error');
+                    }
+                }
+            } catch (error) {
+                showResult('Error connecting to server. Please try again.', 'error');
+                console.error('Error:', error);
+            } finally {
+                // Reset button
+                lookupBtn.innerHTML = 'Lookup Staff';
+                lookupBtn.disabled = false;
+            }
+        }
+
+        function displayStaffInfo(staffData) {
+            const resultDiv = document.getElementById('result');
+            
+            let html = '<div class="staff-info"><h3>Staff Information</h3>';
+            
+            for (const [key, value] of Object.entries(staffData)) {
+                html += `
+                    <div class="info-item">
+                        <span class="info-label">${key}:</span>
+                        <span>${value}</span>
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            
+            resultDiv.innerHTML = html;
+            resultDiv.className = 'result success show';
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = message;
+            resultDiv.className = `result ${type} show`;
+        }
+
+        function clearResult() {
+            document.getElementById('staffId').value = '';
+            const resultDiv = document.getElementById('result');
+            resultDiv.classList.remove('show');
+            setTimeout(() => {
+                resultDiv.innerHTML = '';
+                resultDiv.className = 'result';
+            }, 300);
+        }
+
+        // Enter key support
+        document.getElementById('staffId').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                lookupStaff();
+            }
         });
-    }
-  </script>
+
+        // Auto-focus on input when page loads
+        window.addEventListener('load', function() {
+            document.getElementById('staffId').focus();
+        });
+    </script>
 </body>
 </html>
