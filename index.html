@@ -270,7 +270,7 @@
             const contentDiv = document.getElementById('content');
             
             // Clean phone number for WhatsApp (remove spaces, dashes, etc.)
-            const cleanPhone = (staffData.WhatsApp || '').replace(/[\s\-\(\)]/g, '');
+            const cleanPhone = String(staffData.WhatsApp || '').replace(/[\s\-\(\)]/g, '');
             const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
             
             contentDiv.innerHTML = `
