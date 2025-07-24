@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Staff Profile</title>
+</head>
+<body>
+  <h1 id="staff-name">Loading...</h1>
+  <p id="staff-number"></p>
+  <a id="brochure-link" href="#" target="_blank">Download Brochure</a>
+
+  <script>
+    // STEP 1: Get staffid from URL (e.g., ?staffid=2)
+    const urlParams = new URLSearchParams(window.location.search);
+    const staffid = urlParams.get("staffid");
+
+    if (!staffid) {
+      document.getElementById("staff-name").textContent = "No staff ID provided.";
+    } else {
+      // STEP 2: Your Apps Script exec URL
+      const apiUrl = "https://script.google.com/macros/s/YOUR_DEPLOYED_ID/exec?staffid=" + staffid;
+
+      // STEP 3: Fetch from Apps Script
+      fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.Name) {
+            document.getElementById("staff-name").textContent = "Staff not found.";
+            return;
+          }
+
+          // STEP 4: Inject into HTML
+          document.getElementById("staff-name").textContent = data.Name;
+          document.getElementById("staff-number").textContent = "WhatsApp: " + data.WhatsApp;
+          
+          // Optional: If each staff has their own brochure
+          document.getElementById("brochure-link").href = `brochures/${staffid}.pdf`;
+        })
+        .catch(err => {
+          document.getElementById("staff-name").textContent = "Error loading data.";
+          console.error(err);
+        });
+    }
+  </script>
+</body>
+</html>
