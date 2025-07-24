@@ -172,13 +172,13 @@
 
     <script>
         // Replace with your actual Google Apps Script Web App URL
-        const WEB_APP_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzQsBwtUlPp628xR5sfXWXWQ50M7SJKlUH6v4TVQBTH52-o1iFeB3oruf4J3l8RkLPcWw/exec';
         
         // Generic WhatsApp message
-        const WHATSAPP_MESSAGE = "Hi! I'm interested in learning more about your products and services.";
+        const WHATSAPP_MESSAGE = "Hi! I'm interested in learning more about LG products.";
         
         // Brochure download URL (replace with your actual brochure URL)
-        const BROCHURE_URL = 'https://script.google.com/macros/s/AKfycbzQsBwtUlPp628xR5sfXWXWQ50M7SJKlUH6v4TVQBTH52-o1iFeB3oruf4J3l8RkLPcWw/exec';
+        const BROCHURE_URL = 'YOUR_BROCHURE_PDF_URL_HERE';
 
         // Get staff ID from URL parameter
         function getStaffIdFromUrl() {
@@ -237,6 +237,15 @@
             }
         }
 
+        // Handle brochure download
+        function handleBrochureClick() {
+            if (BROCHURE_URL === 'YOUR_BROCHURE_PDF_URL_HERE') {
+                alert('Brochure will be available soon! Please contact our staff member directly for more information.');
+            } else {
+                window.open(BROCHURE_URL, '_blank');
+            }
+        }
+
         // Display staff information with buttons
         function displayStaffInfo(staffData) {
             const contentDiv = document.getElementById('content');
@@ -257,10 +266,10 @@
                         Contact via WhatsApp
                     </a>
                     
-                    <a href="${BROCHURE_URL}" class="btn brochure-btn" target="_blank" download>
+                    <button onclick="handleBrochureClick()" class="btn brochure-btn">
                         <span>📄</span>
                         Download Brochure
-                    </a>
+                    </button>
                 </div>
             `;
         }
