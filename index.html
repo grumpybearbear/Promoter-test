@@ -178,7 +178,7 @@
         const WHATSAPP_MESSAGE = "Hi! I'm interested in learning more about your products and services.";
         
         // Brochure download URL (replace with your actual brochure URL)
-        const BROCHURE_URL = 'https://www.lg.com/sg/';
+        const BROCHURE_URL = 'YOUR_BROCHURE_PDF_URL_HERE';
 
         // Get staff ID from URL parameter
         function getStaffIdFromUrl() {
@@ -209,46 +209,40 @@
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
-                const contentType = response.headers.get('content-type');
+                // Always get as text first
+                const data = await response.text();
+                console.log('Received data:', data); // Debug log
                 
-                // If it's JSON, parse as JSON
-                if (contentType && contentType.includes('application/json')) {
-                    const staffData = await response.json();
-                    displayStaffInfo(staffData);
+                // Check if it looks like JSON (starts with { or [)
+                if (data.trim().startsWith('{') || data.trim().startsWith('[')) {
+                    try {
+                        const staffData = JSON.parse(data);
+                        console.log('Parsed staff data:', staffData); // Debug log
+                        displayStaffInfo(staffData);
+                    } catch (e) {
+                        console.error('JSON parse error:', e);
+                        contentDiv.innerHTML = `
+                            <div class="error">
+                                <h2>Data Format Error</h2>
+                                <p>Could not parse JSON: ${data}</p>
+                            </div>
+                        `;
+                    }
                 } else {
-                    // Otherwise, get as text
-                    const data = await response.text();
-                    
-                    // Check if it looks like JSON (starts with { or [)
-                    if (data.trim().startsWith('{') || data.trim().startsWith('[')) {
-                        try {
-                            const staffData = JSON.parse(data);
-                            displayStaffInfo(staffData);
-                        } catch (e) {
-                            console.error('JSON parse error:', e);
-                            contentDiv.innerHTML = `
-                                <div class="error">
-                                    <h2>Data Format Error</h2>
-                                    <p>Received: ${data}</p>
-                                </div>
-                            `;
-                        }
+                    // Handle text responses
+                    if (data.includes('LG.com')) {
+                        contentDiv.innerHTML = `
+                            <div class="inactive-message">
+                                ${data}
+                            </div>
+                        `;
                     } else {
-                        // Handle text responses
-                        if (data.includes('LG.com')) {
-                            contentDiv.innerHTML = `
-                                <div class="inactive-message">
-                                    ${data}
-                                </div>
-                            `;
-                        } else {
-                            contentDiv.innerHTML = `
-                                <div class="error">
-                                    <h2>Error</h2>
-                                    <p>${data}</p>
-                                </div>
-                            `;
-                        }
+                        contentDiv.innerHTML = `
+                            <div class="error">
+                                <h2>Error</h2>
+                                <p>${data}</p>
+                            </div>
+                        `;
                     }
                 }
             } catch (error) {
