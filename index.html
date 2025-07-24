@@ -175,10 +175,10 @@
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzQsBwtUlPp628xR5sfXWXWQ50M7SJKlUH6v4TVQBTH52-o1iFeB3oruf4J3l8RkLPcWw/exec';
         
         // Generic WhatsApp message
-        const WHATSAPP_MESSAGE = "Hi! I'm interested in learning more about LG products.";
+        const WHATSAPP_MESSAGE = "Hi! I'm interested in learning more about your products and services.";
         
         // Brochure download URL (replace with your actual brochure URL)
-        const BROCHURE_URL = 'YOUR_BROCHURE_PDF_URL_HERE';
+        const BROCHURE_URL = 'https://www.lg.com/sg/';
 
         // Get staff ID from URL parameter
         function getStaffIdFromUrl() {
@@ -203,27 +203,52 @@
 
             try {
                 const response = await fetch(`${WEB_APP_URL}?staffid=${encodeURIComponent(staffId)}`);
-                const data = await response.text();
-
-                // Try to parse as JSON first
-                try {
-                    const staffData = JSON.parse(data);
+                
+                // Check if response is ok
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const contentType = response.headers.get('content-type');
+                
+                // If it's JSON, parse as JSON
+                if (contentType && contentType.includes('application/json')) {
+                    const staffData = await response.json();
                     displayStaffInfo(staffData);
-                } catch (e) {
-                    // If not JSON, it's a text message
-                    if (data.includes('LG.com')) {
-                        contentDiv.innerHTML = `
-                            <div class="inactive-message">
-                                ${data}
-                            </div>
-                        `;
+                } else {
+                    // Otherwise, get as text
+                    const data = await response.text();
+                    
+                    // Check if it looks like JSON (starts with { or [)
+                    if (data.trim().startsWith('{') || data.trim().startsWith('[')) {
+                        try {
+                            const staffData = JSON.parse(data);
+                            displayStaffInfo(staffData);
+                        } catch (e) {
+                            console.error('JSON parse error:', e);
+                            contentDiv.innerHTML = `
+                                <div class="error">
+                                    <h2>Data Format Error</h2>
+                                    <p>Received: ${data}</p>
+                                </div>
+                            `;
+                        }
                     } else {
-                        contentDiv.innerHTML = `
-                            <div class="error">
-                                <h2>Error</h2>
-                                <p>${data}</p>
-                            </div>
-                        `;
+                        // Handle text responses
+                        if (data.includes('LG.com')) {
+                            contentDiv.innerHTML = `
+                                <div class="inactive-message">
+                                    ${data}
+                                </div>
+                            `;
+                        } else {
+                            contentDiv.innerHTML = `
+                                <div class="error">
+                                    <h2>Error</h2>
+                                    <p>${data}</p>
+                                </div>
+                            `;
+                        }
                     }
                 }
             } catch (error) {
