@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Lookup</title>
+    <title>Contact Our Staff</title>
     <style>
         * {
             margin: 0;
@@ -37,134 +37,106 @@
             transform: translateY(-5px);
         }
 
-        h1 {
-            color: #333;
+        .staff-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 30px;
             margin-bottom: 30px;
-            font-size: 2.5em;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .staff-name {
+            font-size: 2.2em;
+            color: #333;
+            margin-bottom: 10px;
             font-weight: 300;
         }
 
-        .input-group {
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 50px;
+        .staff-title {
             font-size: 1.1em;
-            outline: none;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.8);
+            color: #666;
+            margin-bottom: 20px;
         }
 
-        input[type="text"]:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
-            transform: scale(1.02);
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
         }
 
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .btn {
+            padding: 15px 30px;
             border: none;
-            padding: 15px 40px;
             border-radius: 50px;
             font-size: 1.1em;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-            margin: 10px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        button:hover {
+        .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
-        button:active {
+        .btn:active {
             transform: translateY(-1px);
         }
 
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .result {
-            margin-top: 30px;
-            padding: 20px;
-            border-radius: 15px;
-            font-size: 1.1em;
-            line-height: 1.6;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-        }
-
-        .result.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .result.success {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25D366, #128C7E);
             color: white;
-            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
         }
 
-        .result.error {
-            background: linear-gradient(135deg, #f44336, #da190b);
+        .brochure-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            box-shadow: 0 10px 20px rgba(244, 67, 54, 0.3);
-        }
-
-        .result.info {
-            background: linear-gradient(135deg, #2196F3, #1976D2);
-            color: white;
-            box-shadow: 0 10px 20px rgba(33, 150, 243, 0.3);
-        }
-
-        .staff-info {
-            text-align: left;
-        }
-
-        .staff-info h3 {
-            margin-bottom: 15px;
-            font-size: 1.3em;
-            text-align: center;
-        }
-
-        .info-item {
-            margin: 10px 0;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .info-label {
-            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
 
         .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(102, 126, 234, 0.3);
             border-radius: 50%;
-            border-top-color: white;
+            border-top-color: #667eea;
             animation: spin 1s ease-in-out infinite;
-            margin-left: 10px;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: linear-gradient(135deg, #f44336, #da190b);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(244, 67, 54, 0.3);
+        }
+
+        .inactive-message {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(33, 150, 243, 0.3);
+            font-size: 1.2em;
+            line-height: 1.6;
         }
 
         @media (max-width: 600px) {
@@ -173,45 +145,61 @@
                 margin: 10px;
             }
             
-            h1 {
-                font-size: 2em;
+            .staff-name {
+                font-size: 1.8em;
+            }
+
+            .button-group {
+                gap: 12px;
+            }
+
+            .btn {
+                padding: 12px 25px;
+                font-size: 1em;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Staff Lookup</h1>
-        <div class="input-group">
-            <input type="text" id="staffId" placeholder="Enter Staff ID" />
+        <div id="content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading staff information...</p>
+            </div>
         </div>
-        <button onclick="lookupStaff()" id="lookupBtn">
-            Lookup Staff
-        </button>
-        <button onclick="clearResult()" id="clearBtn" style="background: linear-gradient(135deg, #ff6b6b, #ee5a52);">
-            Clear
-        </button>
-        <div id="result" class="result"></div>
     </div>
 
     <script>
         // Replace with your actual Google Apps Script Web App URL
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzQsBwtUlPp628xR5sfXWXWQ50M7SJKlUH6v4TVQBTH52-o1iFeB3oruf4J3l8RkLPcWw/exec';
+        const WEB_APP_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+        
+        // Generic WhatsApp message
+        const WHATSAPP_MESSAGE = "Hi! I'm interested in learning more about your products and services.";
+        
+        // Brochure download URL (replace with your actual brochure URL)
+        const BROCHURE_URL = 'https://script.google.com/macros/s/AKfycbzQsBwtUlPp628xR5sfXWXWQ50M7SJKlUH6v4TVQBTH52-o1iFeB3oruf4J3l8RkLPcWw/exec';
 
-        async function lookupStaff() {
-            const staffId = document.getElementById('staffId').value.trim();
-            const resultDiv = document.getElementById('result');
-            const lookupBtn = document.getElementById('lookupBtn');
+        // Get staff ID from URL parameter
+        function getStaffIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id') || urlParams.get('staffid');
+        }
+
+        // Load staff information
+        async function loadStaffInfo() {
+            const staffId = getStaffIdFromUrl();
+            const contentDiv = document.getElementById('content');
 
             if (!staffId) {
-                showResult('Please enter a Staff ID', 'error');
+                contentDiv.innerHTML = `
+                    <div class="error">
+                        <h2>Invalid Link</h2>
+                        <p>No staff ID provided in the URL.</p>
+                    </div>
+                `;
                 return;
             }
-
-            // Show loading state
-            lookupBtn.innerHTML = 'Looking up... <span class="loading"></span>';
-            lookupBtn.disabled = true;
-            resultDiv.classList.remove('show');
 
             try {
                 const response = await fetch(`${WEB_APP_URL}?staffid=${encodeURIComponent(staffId)}`);
@@ -219,73 +207,66 @@
 
                 // Try to parse as JSON first
                 try {
-                    const jsonData = JSON.parse(data);
-                    displayStaffInfo(jsonData);
+                    const staffData = JSON.parse(data);
+                    displayStaffInfo(staffData);
                 } catch (e) {
-                    // If not JSON, it's a text message (error or LG.com message)
+                    // If not JSON, it's a text message
                     if (data.includes('LG.com')) {
-                        showResult(data, 'info');
+                        contentDiv.innerHTML = `
+                            <div class="inactive-message">
+                                ${data}
+                            </div>
+                        `;
                     } else {
-                        showResult(data, 'error');
+                        contentDiv.innerHTML = `
+                            <div class="error">
+                                <h2>Error</h2>
+                                <p>${data}</p>
+                            </div>
+                        `;
                     }
                 }
             } catch (error) {
-                showResult('Error connecting to server. Please try again.', 'error');
-                console.error('Error:', error);
-            } finally {
-                // Reset button
-                lookupBtn.innerHTML = 'Lookup Staff';
-                lookupBtn.disabled = false;
-            }
-        }
-
-        function displayStaffInfo(staffData) {
-            const resultDiv = document.getElementById('result');
-            
-            let html = '<div class="staff-info"><h3>Staff Information</h3>';
-            
-            for (const [key, value] of Object.entries(staffData)) {
-                html += `
-                    <div class="info-item">
-                        <span class="info-label">${key}:</span>
-                        <span>${value}</span>
+                contentDiv.innerHTML = `
+                    <div class="error">
+                        <h2>Connection Error</h2>
+                        <p>Unable to load staff information. Please try again later.</p>
                     </div>
                 `;
+                console.error('Error:', error);
             }
+        }
+
+        // Display staff information with buttons
+        function displayStaffInfo(staffData) {
+            const contentDiv = document.getElementById('content');
             
-            html += '</div>';
+            // Clean phone number for WhatsApp (remove spaces, dashes, etc.)
+            const cleanPhone = (staffData.WhatsApp || '').replace(/[\s\-\(\)]/g, '');
+            const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
             
-            resultDiv.innerHTML = html;
-            resultDiv.className = 'result success show';
+            contentDiv.innerHTML = `
+                <div class="staff-card">
+                    <h1 class="staff-name">${staffData.Name || 'Staff Member'}</h1>
+                    <p class="staff-title">Sales Representative</p>
+                </div>
+                
+                <div class="button-group">
+                    <a href="${whatsappUrl}" class="btn whatsapp-btn" target="_blank">
+                        <span>💬</span>
+                        Contact via WhatsApp
+                    </a>
+                    
+                    <a href="${BROCHURE_URL}" class="btn brochure-btn" target="_blank" download>
+                        <span>📄</span>
+                        Download Brochure
+                    </a>
+                </div>
+            `;
         }
 
-        function showResult(message, type) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = message;
-            resultDiv.className = `result ${type} show`;
-        }
-
-        function clearResult() {
-            document.getElementById('staffId').value = '';
-            const resultDiv = document.getElementById('result');
-            resultDiv.classList.remove('show');
-            setTimeout(() => {
-                resultDiv.innerHTML = '';
-                resultDiv.className = 'result';
-            }, 300);
-        }
-
-        // Enter key support
-        document.getElementById('staffId').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                lookupStaff();
-            }
-        });
-
-        // Auto-focus on input when page loads
-        window.addEventListener('load', function() {
-            document.getElementById('staffId').focus();
-        });
+        // Load staff info when page loads
+        window.addEventListener('load', loadStaffInfo);
     </script>
 </body>
 </html>
