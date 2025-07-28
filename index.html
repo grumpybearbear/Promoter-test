@@ -175,7 +175,7 @@
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzQsBwtUlPp628xR5sfXWXWQ50M7SJKlUH6v4TVQBTH52-o1iFeB3oruf4J3l8RkLPcWw/exec';
         
         // Generic WhatsApp message
-        const WHATSAPP_MESSAGE = "Hi ${staffData.Name || 'Staff Member'}! I'm interested in learning more about LG TVs.";
+   //     const WHATSAPP_MESSAGE = "Hi ${staffData.Name || 'Staff Member'}! I'm interested in learning more about LG TVs.";
         
         // Brochure download URL (replace with your actual brochure URL)
         const BROCHURE_URL = 'YOUR_BROCHURE_PDF_URL_HERE';
@@ -271,8 +271,10 @@
             
             // Clean phone number for WhatsApp (remove spaces, dashes, etc.)
             const cleanPhone = String(staffData.WhatsApp || '').replace(/[\s\-\(\)]/g, '');
-            const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
-            
+            const message = "Hi ${staffData.Name || 'Staff Member'}! I'm interested in learning more about LG TVs.";
+            const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+         //   const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+
             contentDiv.innerHTML = `
                 <div class="staff-card">
                     <h1 class="staff-name">${staffData.Name || 'Staff Member'}</h1>
