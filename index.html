@@ -175,7 +175,7 @@
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzQsBwtUlPp628xR5sfXWXWQ50M7SJKlUH6v4TVQBTH52-o1iFeB3oruf4J3l8RkLPcWw/exec';
         
         // Generic WhatsApp message
-        const WHATSAPP_MESSAGE = "Hi! I'm interested in learning more about your products and services.";
+        const WHATSAPP_MESSAGE = "Hi ${staffData.Name || 'Staff Member'}! I'm interested in learning more about LG TVs.";
         
         // Brochure download URL (replace with your actual brochure URL)
         const BROCHURE_URL = 'YOUR_BROCHURE_PDF_URL_HERE';
@@ -276,7 +276,7 @@
             contentDiv.innerHTML = `
                 <div class="staff-card">
                     <h1 class="staff-name">${staffData.Name || 'Staff Member'}</h1>
-                    <p class="staff-title">Sales Representative</p>
+                    <p class="staff-title">Product Specialist</p>
                 </div>
                 
                 <div class="button-group">
