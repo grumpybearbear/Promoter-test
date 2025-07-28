@@ -271,7 +271,7 @@
             
             // Clean phone number for WhatsApp (remove spaces, dashes, etc.)
             const cleanPhone = String(staffData.WhatsApp || '').replace(/[\s\-\(\)]/g, '');
-            const message = "Hi ${staffData.Name || 'Staff Member'}! I'm interested in learning more about LG TVs.";
+            const message = `Hi ${staffData.Name || 'Staff Member'}! I'm interested in learning more about LG TVs.`;
             const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
          //   const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
